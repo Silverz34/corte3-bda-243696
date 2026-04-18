@@ -15,15 +15,15 @@ SELECT
     m.especie, 
     d.nombre AS nombre_dueno,
     d.telefono AS telefono_dueno,
-    v.ultima_vacuna
+    v.ultima_vacuna,
     CURRENT_DATE - v.ultima_vacuna AS dias_desde_ultima_vacuna
 CASE 
-    WHEN uv.fecha_ultima_vacuna IS NULL THEN 'SIN VACUNAS'
+    WHEN uv.fecha_ultima_vacuna IS NULL THEN 'NUNCA_VACUNADA'
     ELSE 'VENCIDA'
-END AS estado_vacunacion 
+END AS prioridad 
 FROM mascotas m
 JOIN duenos d ON m.dueno_id = d.id
 LEFT JOIN 
-    UltimaVacuna uv ON m.id = uv.mascota_id
+    Ultima_vacuna uv ON m.id = uv.mascota_id
 WHERE v.ultima_vacuna IS NULL 
 OR (CURRENT_DATE - v.ultima_vacuna) > 365; -- Consideramos que la vacuna es válida por un año (365 días)

@@ -4,14 +4,24 @@ CREATE OR REPLACE PROCEDURE sp_agendar_cita(
     p_fecha_hora TIMESTAMP,
     p_motivo TEXT,
     OUT p_cita_id INT
-)AS BEGIN
+)AS $$ DECLARE
+    v_mascota_existe BOOLEAN;
+    v_vet_activo BOOLEAN;
+    v_dias_descanso VARCHAR(50);
+    v_dia_semana TEXT;
+    v_colision_existe BOOLEAN; 
+BEGIN
     -- Verificar que la mascota exista
-    IF NOT EXISTS (SELECT 1 FROM mascotas WHERE id = p_mascota_id) THEN
+    SELECT EXISTS (SELECT 1 FROM mascotas WHERE id = p_mascota_id) INTO v_mascota_existe;
+    IF NOT v_mascota_existe OR v_mascota_existe IS NULL THEN
         RAISE EXCEPTION 'La mascota con ID % no existe', p_mascota_id;
     END IF;
 
-    -- Verificar que el veterinario exista
-    IF NOT EXISTS (SELECT 1 FROM veterinarios WHERE id = p_veterinario_id) THEN
+    -- Verificar que el veterinario (exista, estado y bloqueo de ocurrencias)
+    SELECT activo, dias_descanso INTO v_vet_
+
+
+    IF NOT v_vet_activo OR v_vet_activo IS NULL THEN
         RAISE EXCEPTION 'El veterinario con ID % no existe', p_veterinario_id;
     END IF;
 
