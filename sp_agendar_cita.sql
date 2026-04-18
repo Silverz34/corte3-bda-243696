@@ -4,7 +4,8 @@ CREATE OR REPLACE PROCEDURE sp_agendar_cita(
     p_fecha_hora TIMESTAMP,
     p_motivo TEXT,
     OUT p_cita_id INT
-)AS $$ DECLARE
+)LANGUAGE plpgsql
+AS $$ DECLARE
     v_mascota_existe BOOLEAN;
     v_vet_activo BOOLEAN;
     v_dias_descanso VARCHAR(50);
@@ -56,3 +57,4 @@ BEGIN
         WHEN OTHERS THEN
             RAISE EXCEPTION 'Error al agendar la cita: %', SQLERRM;
 END;
+$$;
