@@ -22,7 +22,7 @@ USING (
     id IN (
         SELECT mascota_id
         FROM vet_atiende_mascota
-        WHERE vet_id = current_setting('app.current_vet_id', true)::integer
+        WHERE vet_id = current_setting('app.current_vet_id', true)::INT
     )
 )
 
@@ -38,6 +38,27 @@ CREATE POLICY p_citas_veterinario ON citas
 FOR  SELECT 
 TO veterinario 
 USING (
-    veterinario_id = current_setting('app.current_vet_id', true)::integer
+    veterinario_id = current_setting('app.current_vet_id', true)::INT
 )
 
+
+--IMPLEMENTAR RLS EN TABLA DE VACUNAS APLICADAS
+ALTER TABLE vacunas_aplicadas ENABLE ROW LEVEL SECURITY;
+
+--admin ve el historial de todos 
+CREATE POLICY p_vacunas_admin ON vacunas-aplicadas 
+FOR ALL
+TO admin 
+USING (true);
+
+-- Veterinario solo ve las vacunas de las mascotas que atiende
+CREATE POLICY p_vacunas_veterinarioON vacunas_aplicadas
+FOR SELECT 
+TO veterinario 
+USING(
+    mascota_id IN(
+        SELECT mascota_id
+        FROM vet_atiende_mascota
+      WHERE vet_id = current_setting('app.current_vet_id', true)::INT
+    )
+);
