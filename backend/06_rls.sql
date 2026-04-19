@@ -52,7 +52,7 @@ TO admin
 USING (true);
 
 -- Veterinario solo ve las vacunas de las mascotas que atiende
-CREATE POLICY p_vacunas_veterinarioON vacunas_aplicadas
+CREATE POLICY p_vacunas_veterinario ON vacunas_aplicadas
 FOR SELECT 
 TO veterinario 
 USING(
