@@ -10,14 +10,14 @@ export const agendarCita = async (req: Request, res: Response): Promise<void> =>
     try{
         await client.query('BEGIN');
 
-        await client.query('SET ROLE $1', [rol]);
+        await client.query(`SET ROLE ${rol}`);
         if (vetId) {
             await client.query(`SELECT set_config('app.current_vet_id', $1, true)`, [vetId]);
         }
 
         //llamar la store procedure para agemdar una nueva cita 
         //lo llamare con call 
-        const  querySQL = `CALL agendar_cita($1, $2, $3, $4, $5)`;
+        const  querySQL = `CALL agendar_cita($1, $2, $3, $4, NULL)`;
         const valores = [mascota_id, veterinario_id, fecha_hora, motivo, estado]
         
         const result = await client.query(querySQL, valores);
