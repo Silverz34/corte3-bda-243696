@@ -9,7 +9,7 @@ export const buscarMascotas = async(req: Request, res: Response): Promise<void> 
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
-        await client.query('SET ROLE $1', [rol]);
+        await client.query(`SET ROLE ${rol}`);
         if(vetId){
             await client.query(`SELECT set_config('app.current_vet_id', $1, true)`, [vetId]);
         }
