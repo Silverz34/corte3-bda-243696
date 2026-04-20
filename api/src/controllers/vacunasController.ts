@@ -35,3 +35,37 @@ export const obtenerVacunasPen = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
+
+//aplicar vacunas y borrar cache (ayudita con gemini)
+export const aplicarVacuna = async (req: Request, res: Response) => {
+    const { mascota_id, vacuna_id, costo_cobrado } = req.body;
+    const veterinario_id = req.headers['x-vet-id'];
+
+    const client = await pool.connect();
+    try{
+        await client.query('BEGIN');
+
+        // Insertar el registro de vacunación
+        const queryInsert = `
+            INSERT INTO vacunas_aplicadas (mascota_id, vacuna_id, veterinario_id, costo_cobrado, fecha_aplicacion)
+            VALUES ($1, $2, $3, $4, CURRENT_DATE)
+            RETURNING id;
+        `;
+        const valores = [mascota_id, vacuna_id, veterinario_id, costo_cobrado];
+       
+        await client.query(queryInsert, valores);
+        await client.query('COMMIT');
+ 
+        // Como alguien vacunó a una mascota, la lista de "pendientes" ya cambió.
+        // Borramos la llave de Redis para forzar un CACHE MISS la próxima vez.
+        await redisClient.del('vacunas_pendientes');
+        console.log('[REDIS] cache invalido para vacunas_pendientes');
+        res.status(200).json({ message: 'Vacuna aplicada exitosamente' });
+    }catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Error al aplicar vacuna:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }finally {
+        client.release();
+    }
+};
