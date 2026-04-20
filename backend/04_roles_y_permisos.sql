@@ -1,6 +1,4 @@
 
-
-
 -- roles 
 CREATE ROLE admin;
 CREATE ROLE recepcion;
@@ -17,5 +15,12 @@ GRANT SELECT ON mascotas, duenos, vet_atiende_mascota TO veterinario;
 GRANT SELECT, INSERT ON citas, vacunas_aplicadas TO veterinario;
 
 --permisos de admin 
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO admin  
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO admin;
 
+
+
+-- USUARIO PARA CONEXION EXCLUSIVO PARA LA API 
+CREATE ROLE api_backend WITH LOGIN PASSWORD 'Kalaha0918'; --este si maneja contraseña 
+GRANT CONNECT ON DATABASE clinica_vet TO api_backend;
+GRANT USAGE ON SCHEMA public TO api_backend;
+GRANT veterinario, recepcion, admin TO api_backend;

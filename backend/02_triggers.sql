@@ -8,8 +8,8 @@ v_nombre_vet VARCHAR(100);
 v_descripcion TEXT;
 BEGIN 
     --Usar el registro NEW, que contiene los datos de la cita
-    SELECT nombre INTO v_nombre_mascota FROM mascota WHERE id = NEW.mascota_id;
-    SELECT nombre INTO v_nombre_vet FROM veterinario WHERE id = NEW.veterinario_id;
+  SELECT nombre INTO v_nombre_mascota FROM mascotas WHERE id = NEW.mascota_id;
+  SELECT nombre INTO v_nombre_vet FROM veterinarios WHERE id = NEW.veterinario_id;
  
    --esquema de descripcion cita  
   v_descripcion := format('Cita para %scon %s el %s',
