@@ -40,3 +40,19 @@ El sistema lo previene centralizando la conexión en la API: el usuario de BD (a
 
 ### 4. ¿Qué TTL le pusiste al caché Redis y por qué ese valor específico? ¿Qué pasaría si fuera demasiado bajo? ¿Demasiado alto?
 aun no se si dejarla en 5 min o mejor 1 hr 
+
+
+
+### 5. Tu frontend manda input del usuario al backend. Elige un endpoint crítico y pega la línea exacta donde el backend maneja ese input antes de enviarlo a la base de datos. Explica qué protege esa línea y de qué. Indica archivo y número de línea.
+
+
+
+
+### 6. Si revocas todos los permisos del rol de veterinario excepto SELECT en mascotas, ¿qué deja de funcionar en tu sistema? Lista tres operaciones que se romperían.
+Se romperian todas las reglas de negocio, dejarian de funcionar en su mayoria. 
+
+* La visualización de mascotas (RLS fallaría): El veterinario perdería el acceso a la tabla vet_atiende_mascota, por lo que la subconsulta de la política RLS fallaría y no vería ningún animal.
+
+* Agendar citas: Perdería el privilegio INSERT en la tabla citas, rompiendo el procedure sp_agendar_cita.
+
+* Aplicar vacunas: Perdería el privilegio INSERT en vacunas_aplicadas, impidiendo registrar tratamientos.
