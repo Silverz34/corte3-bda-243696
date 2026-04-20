@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 import {pool} from '../config/database';
 
 export const agendarCita = async (req: Request, res: Response): Promise<void> => {
-    const { mascota_id, veterinario_id, fecha_cita, motivo } = req.body;
+    const { mascota_id, veterinario_id, fecha_hora, motivo, estado } = req.body;
     const vetId = req.headers['x-vet-id'] as string;
     const rol = req.headers['x-rol'] as string; 
 
@@ -16,9 +16,17 @@ export const agendarCita = async (req: Request, res: Response): Promise<void> =>
         }
 
         //llamar la store procedure para agemdar una nueva cita 
-        //aun no se como se llama
+        //lo llamare con call 
+        const  querySQL = `CALL agendar_cita($1, $2, $3, $4, $5)`;
+        const valores = [mascota_id, veterinario_id, fecha_hora, motivo, estado]
+        
+        const result = await client.query(querySQL, valores);
+        await client.query('COMMIT');
 
-
+        //extraer el id de la cita que devuelve el procedure 
+        const citaGenerada = result.rows[0]; 
+        res.status(201).json({ message: 'Cita agendada exitosamente', cita: citaGenerada });
+        
     }catch(error: any){
         await client.query('ROLLBACK');
         console.error('Error al agendar cita:', error.message);
