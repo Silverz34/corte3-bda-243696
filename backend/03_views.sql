@@ -1,7 +1,7 @@
 
 --View para mostrar las vacunaciones pendientes de cada mascota
 
-CREATE OR REPLACE VIEWv_ascotas_vacunacion_pendiente AS
+CREATE OR REPLACE VIEW v_ascotas_vacunacion_pendiente AS
 --olvide el CTE 
 WITH Ultima_vacuna AS (
     SELECT
