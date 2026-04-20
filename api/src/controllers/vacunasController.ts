@@ -2,6 +2,7 @@
 import {Request, Response} from 'express';
 import {pool} from '../config/database';
 import {redisClient} from '../config/redis';
+import { VacunasSchema } from '../zodSchema/vacunasSchema';
 
 
 export const obtenerVacunasPen = async (req: Request, res: Response) => {
@@ -38,6 +39,16 @@ export const obtenerVacunasPen = async (req: Request, res: Response) => {
 
 //aplicar vacunas y borrar cache (ayudita con gemini)
 export const aplicarVacuna = async (req: Request, res: Response) => {
+    const validacion = VacunasSchema.safeParse(req.body);
+
+    if(!validacion.success){
+        res.status(400).json({
+            error: 'Datos de entrada invalidos',
+            detalles: validacion.error.format()
+        });
+        return;
+    }
+
     const { mascota_id, vacuna_id, costo_cobrado } = req.body;
     const veterinario_id = req.headers['x-vet-id'];
 
