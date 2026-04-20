@@ -28,6 +28,7 @@ export const buscarMascotas = async(req: Request, res: Response): Promise<void> 
         console.error('Error al buscar mascotas:', error);
         res.status(500).json({ error: 'Error al buscar mascotas.' });
     } finally {
+        await client.query('RESET ROLE');
         client.release();
     }
 };
