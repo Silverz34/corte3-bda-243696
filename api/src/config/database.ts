@@ -1,14 +1,13 @@
-import {Pool} from 'pg';
+import { Pool } from 'pg';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Si por alguna razón TypeScript no lee el .env a tiempo, usará esta cadena segura.
+const connectionString = process.env.DATABASE_URL || 'postgresql://api_backend:Kalaha0918@localhost:5432/clinica_vet';
+
 export const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: parseInt(process.env.DB_PORT || '5432'),
+    connectionString: connectionString
 });
 
 pool.on('error', (err) => {

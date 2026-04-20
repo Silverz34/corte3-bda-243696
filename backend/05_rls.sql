@@ -1,52 +1,48 @@
+-- Habilitar RLS en la tabla de mascotas 
+ALTER TABLE mascotas ENABLE ROW LEVEL SECURITY;
 
---habilitar RLS en ta tabla de mascotas 
-ALTER TABLE  mascotas ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY p_mascotas_admin_recepcion ON mascotas 
-FOR ALL TO admin, recepcion 
-USING (true);
-
--- politicas para admin y recepcion 
+-- Politicas para admin y recepcion (Corregido: Solo una vez)
 CREATE POLICY p_mascotas_admin_recepcion ON mascotas 
 FOR ALL 
-TO admin, reccepcion 
-USING (true); -- significa que no hay restricciones 
+TO admin, recepcion 
+USING (true); 
 
---politicas para veterinarios (filtro por ID)
+-- Politicas para veterinarios (filtro por ID)
 CREATE POLICY p_mascotas_veterinario ON mascotas 
 FOR SELECT 
 TO veterinario 
 USING (
-
-    -- Verificamos si el ID de la mascota está en la lista de mascotas asignadas al veterinario actual
     id IN (
         SELECT mascota_id
         FROM vet_atiende_mascota
         WHERE vet_id = current_setting('app.current_vet_id', true)::INT
     )
-)
+); 
 
---IMPLEMENTAR RLS EN TABLA DE CITAS 
---admin y recepcion ven todas las citas 
+
+-- IMPLEMENTAR RLS EN TABLA DE CITAS 
+ALTER TABLE citas ENABLE ROW LEVEL SECURITY; -- Corregido: Faltaba prender la seguridad de esta tabla
+
+-- admin y recepcion ven todas las citas 
 CREATE POLICY p_citas_admin_recepcion ON citas 
 FOR ALL 
 TO admin, recepcion
 USING(true);
 
---veterinarios solo ven sus citas 
+-- veterinarios solo ven sus citas 
 CREATE POLICY p_citas_veterinario ON citas
-FOR  SELECT 
+FOR SELECT 
 TO veterinario 
 USING (
     veterinario_id = current_setting('app.current_vet_id', true)::INT
-)
+); 
 
 
---IMPLEMENTAR RLS EN TABLA DE VACUNAS APLICADAS
+-- IMPLEMENTAR RLS EN TABLA DE VACUNAS APLICADAS
 ALTER TABLE vacunas_aplicadas ENABLE ROW LEVEL SECURITY;
 
---admin ve el historial de todos 
-CREATE POLICY p_vacunas_admin ON vacunas-aplicadas 
+-- admin ve el historial de todos 
+CREATE POLICY p_vacunas_admin ON vacunas_aplicadas -- Corregido: Tenia guion medio en lugar de guion bajo
 FOR ALL
 TO admin 
 USING (true);

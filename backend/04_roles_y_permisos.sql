@@ -15,7 +15,7 @@ GRANT SELECT ON mascotas, duenos, vet_atiende_mascota TO veterinario;
 GRANT SELECT, INSERT ON citas, vacunas_aplicadas TO veterinario;
 
 --permisos de admin 
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO admin  
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO admin;
 
 
 
