@@ -1,8 +1,20 @@
 import {Request, Response} from 'express';
 import {pool} from '../config/database';
+import {CitaSchema} from '../zodSchema/CitaPayload'
+
 
 export const agendarCita = async (req: Request, res: Response): Promise<void> => {
-    const { mascota_id, veterinario_id, fecha_hora, motivo, estado } = req.body;
+
+    const validacion = CitaSchema.safeParse(req.body);
+
+    if(!validacion.success){
+        res.status(400).json({
+            error: 'Datos de entrada invalidos',
+            detalles: validacion.error.format()
+        });
+        return;
+    }
+    const { mascota_id, veterinario_id, fecha_hora, motivo} = validacion.data;
     const vetId = req.headers['x-vet-id'] as string;
     const rol = req.headers['x-rol'] as string; 
 
@@ -18,7 +30,7 @@ export const agendarCita = async (req: Request, res: Response): Promise<void> =>
         //llamar la store procedure para agemdar una nueva cita 
         //lo llamare con call 
         const  querySQL = `CALL agendar_cita($1, $2, $3, $4, NULL)`;
-        const valores = [mascota_id, veterinario_id, fecha_hora, motivo, estado]
+        const valores = [mascota_id, veterinario_id, fecha_hora, motivo]
         
         const result = await client.query(querySQL, valores);
         await client.query('COMMIT');
