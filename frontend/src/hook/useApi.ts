@@ -23,7 +23,8 @@ export const useApiClient = () => {
     if (rol) headers['x-rol'] = rol;
     if (vetId) headers['x-vet-id'] = vetId;
 
-    const res = await fetch(new URL(path, BASE).toString(), {
+    const urlFinal = `${BASE}${path}`;
+    const res = await fetch(urlFinal, {
       method,
       headers,
       ...(body !== undefined && { body: JSON.stringify(body) }),
@@ -50,7 +51,7 @@ export const useApiClient = () => {
     return {
       success: true,
       message: json.mensaje,
-      data: json.cita || json // Si trae la propiedad cita, la devolvemos, si no, devolvemos todo
+      data: json.cita || json 
     };
   };
 

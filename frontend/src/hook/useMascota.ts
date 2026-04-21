@@ -25,7 +25,6 @@ export const useMascotas = () => {
     setCargando(true);
     setError(null);
     setBusquedaRealizada(true);
-
     try {
       const respuesta = await apiGet<Mascota[]>(`/mascotas?q=${encodeURIComponent(terminoBusqueda)}`);
       setMascotas(respuesta.data || []);
