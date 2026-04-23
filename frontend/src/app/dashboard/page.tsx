@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import BusquedaMascotas from '@/components/BusquedaMascota';
+import VacunasPendientes from '@/components/vacunaspendient';
 
 export default function DashboardPage() {
   const { rol, vetId, isAuthenticated, logout } = useAuth();
@@ -42,7 +43,7 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="px-8 mx-auto py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {(rol === 'veterinario' || rol === 'admin') && (
@@ -75,11 +76,7 @@ export default function DashboardPage() {
                   </div>
                  </>
                )}
-
-              <div className="bg-white p-6 rounded-xl shadow border-l-4placeholder-card">
-                <h2 className="text-lg font-bold mb-2 text-black"> Vacunas Pendientes</h2>
-                <p className="text-sm text-gray-500">Aquí irá la tabla súper rápida conectada a Redis.</p>
-              </div>
+                <VacunasPendientes/>
             </>
           )}
 

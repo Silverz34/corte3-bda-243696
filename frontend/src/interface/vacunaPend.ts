@@ -1,9 +1,11 @@
 
 
 export interface VacunaPendiente{
- mascota_id: number;
  nombre_mascota: string;
  especie: string;
- vacuna_id:number;
- nombre_vacuna: string;
+ nombre_dueno: string;
+ telefono_dueno: string;
+ fecha_ultima_vacuna: string;
+ dias_desde_ultima_vacuna: number;
+ prioridad: string;
 }

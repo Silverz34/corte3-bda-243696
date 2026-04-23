@@ -4,39 +4,37 @@ import { useApiClient} from "./useApi";
 import { ApiError } from "./apiError";
 import { VacunaPendiente } from "@/interface/vacunaPend";
 
-
-export const useVacunas = () =>{
-  const {apiGet} = useApiClient();
-
+export const useVacunas = () => {
+  const { apiGet } = useApiClient();
+  
   const [pendientes, setPendientes] = useState<VacunaPendiente[]>([]);
   const [cargando, setCargando] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const obtenerPendiente = async () =>{
-     setCargando(true);
-     setError(null);
-     
-        try{
+  const obtenerPendientes = async () => {
+    setCargando(true);
+    setError(null);
 
-            const respuesta = await apiGet<VacunaPendiente[]>('/vacunas/pendientes');
-            setPendientes(respuesta.data || []);
+    try {
+      const respuesta = await apiGet<VacunaPendiente[]>('/vacunas/pendientes');
+      setPendientes(respuesta.data || []);
+    } catch (err: unknown) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Error al obtener las vacunas pendientes.');
+      }
+    } finally {
+      setCargando(false);
+    }
+  };
 
-        }catch( err: unknown){
-            if(err instanceof ApiError){
-                setError(err.message);
-            }else if(err instanceof Error){
-                setError(err.message);
-            }else{
-                setError('error al obtener las vacunas pendientes');
-            }
-        }finally{
-            setCargando(false);
-        }
-    };
-    return {
-        pendientes, 
-        cargando,
-        error, 
-        obtenerPendiente
-    };
+  return {
+    pendientes,
+    cargando,
+    error,
+    obtenerPendientes,
+  };
 };
