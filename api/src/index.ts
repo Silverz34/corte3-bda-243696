@@ -39,9 +39,10 @@ const startServer = async () => {
 import citaRoutes from './routes/citaRoutes';
 import mascotaRoutes from './routes/mascotaRoutes';
 import vacunasRoutes from './routes/vacunasRoutes';
+import veterinarioRoutes from './routes/veterinarioRoutes';
 
 app.use('/api/citas', citaRoutes);
 app.use('/api', mascotaRoutes);
 app.use('/api/vacunas', vacunasRoutes);
-
+app.use('/api/veterinarios', veterinarioRoutes);
 startServer();
