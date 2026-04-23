@@ -1,44 +1,17 @@
 services:
-  api: 
-    build: ./api
-    depends_on:
-      redis:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
-    environment:
-      - REDIS_URL=${REDIS_URL}
-      - DATABASE_URL=${DATABASE_URL}
-
-  redis:
-    image: redis:7-alpine 
-    container_name: bda_redis
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
+  # --- CAPA 1: PERSISTENCIA (Base de Datos) ---
   postgres:
     image: postgres:16-alpine
     container_name: bda_postgres
-    restart: unless-stopped
+    restart: always
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     ports:
-      - "5433:5432"
+      - "5433:5432" # Mantenemos 5433 para acceso externo (DBeaver/DataGrip)
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
-      #inyeccion de scripts 
       - ./00_Schema_C3.sql:/docker-entrypoint-initdb.d/00_Schema_C3.sql
       - ./backend/01_procedures.sql:/docker-entrypoint-initdb.d/01_procedures.sql
       - ./backend/02_triggers.sql:/docker-entrypoint-initdb.d/02_triggers.sql
@@ -47,11 +20,56 @@ services:
       - ./backend/05_rls.sql:/docker-entrypoint-initdb.d/05_rls.sql
       - ./backend/06_function.sql:/docker-entrypoint-initdb.d/06_function.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME} -h localhost"]
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
       timeout: 5s
       retries: 5
 
+  # --- CAPA 2: CACHÉ (Redis) ---
+  redis:
+    image: redis:7-alpine
+    container_name: bda_redis
+    restart: always
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
+
+  # --- CAPA 3: BACKEND (API) ---
+  api:
+    build: ./api # Asegúrate de que aquí esté tu Dockerfile
+    container_name: bda_api
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - PORT=${PORT}
+    ports:
+      - "${PORT}:${PORT}"
+
+  # --- CAPA 4: FRONTEND (Next.js / React) ---
+  frontend:
+    build: 
+      context: ./frontend
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+    container_name: bda_frontend
+    restart: always
+    # CRITICO: Espera a que la API pase su propio healthcheck
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+    ports:
+      - "3000:3000"
+
 volumes:
-  redis_data:
   postgres_data:
+  redis_data:
