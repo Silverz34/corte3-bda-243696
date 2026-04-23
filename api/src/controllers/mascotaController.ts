@@ -5,7 +5,7 @@ export const buscarMascotas = async(req: Request, res: Response): Promise<void> 
     const vetId = req.headers['x-vet-id'] as string;
     const rol = req.headers['x-rol'] as string; 
 
-    const busqueda = req.query.busqueda as string || '';
+    const busqueda = req.query.q as string || '';
     const client = await pool.connect();
     try {
         await client.query('BEGIN');

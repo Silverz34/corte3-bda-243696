@@ -3,15 +3,7 @@
 import { useState } from 'react';
 import { useApiClient } from './useApi';
 import { ApiError } from './apiError';
-
-
-export interface Mascota {
-  id: number;
-  nombre: string;
-  especie: string;
-  fecha_nacimiento: string;
-  dueno_id: number;
-}
+import { Mascota } from '@/interface/Mascota';
 
 export const useMascotas = () => {
   const { apiGet } = useApiClient();

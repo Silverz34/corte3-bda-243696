@@ -1,11 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMascotas } from '@/hook/useMascota';
 
 export default function BusquedaMascotas() {
   const [termino, setTermino] = useState<string>('');
   const { mascotas, cargando, error, busquedaRealizada, buscarMascotas } = useMascotas();
+
+  useEffect(()=>{
+    buscarMascotas('');
+  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,7 +22,7 @@ export default function BusquedaMascotas() {
         <h2 className="text-xl font-bold text-gray-800">Búsqueda de Pacientes</h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex gap-3 mb-6">
+      <form onSubmit={handleSubmit} className="flex gap-3 mb-6 text-black">
         <input
           type="text"
           placeholder="Ej. Firulais"
