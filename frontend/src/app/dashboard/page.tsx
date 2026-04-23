@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import BusquedaMascotas from '@/components/BusquedaMascota';
 import VacunasPendientes from '@/components/vacunaspendient';
 import AgendarCita from '@/components/FormularioCita';
+import AplicarVacuna from '@/components/useAplicarVacuna';
 
 
 export default function DashboardPage() {
@@ -52,13 +53,8 @@ export default function DashboardPage() {
             <>
               <BusquedaMascotas />
               <AgendarCita />
+              <AplicarVacuna />
              
-
-              {/* <AplicarVacuna /> */}
-              <div className="bg-white p-6 rounded-xl shadow border border-gray-100 placeholder-card">
-                <h2 className="text-lg font-bold mb-2 text-black"> Aplicar Vacuna</h2>
-                <p className="text-sm text-gray-500">Aquí irá el componente que inserta y borra el caché de Redis.</p>
-              </div>
             </>
           )}
 
