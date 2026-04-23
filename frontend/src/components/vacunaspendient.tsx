@@ -19,8 +19,6 @@ export default function VacunasPendientes() {
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 overflow-hidden">
-      
-      {/* CABECERA CON BADGE DE REDIS */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
           <h2 className="text-xl font-bold text-gray-800">Campaña de Vacunación</h2>
@@ -66,7 +64,6 @@ export default function VacunasPendientes() {
             </thead>
             <tbody>
               {pendientes.map((fila, index) => (
-                // Usamos el index porque la vista SQL no nos trae un ID único
                 <tr key={`${fila.nombre_mascota}-${index}`} className="bg-white border-b hover:bg-gray-50 transition-colors">
                   
                   <td className="px-4 py-4">

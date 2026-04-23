@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import BusquedaMascotas from '@/components/BusquedaMascota';
 import VacunasPendientes from '@/components/vacunaspendient';
+import AgendarCita from '@/components/FormularioCita';
+
 
 export default function DashboardPage() {
   const { rol, vetId, isAuthenticated, logout } = useAuth();
@@ -49,11 +51,8 @@ export default function DashboardPage() {
           {(rol === 'veterinario' || rol === 'admin') && (
             <>
               <BusquedaMascotas />
-              {/* <AgendarCita /> */}
-              <div className="bg-white p-6 rounded-xl shadow border border-gray-100 placeholder-card">
-                <h2 className="text-lg font-bold mb-2 text-black"> Agendar Cita</h2>
-                <p className="text-sm text-gray-500">Aquí irá el componente que ejecuta el Stored Procedure.</p>
-              </div>
+              <AgendarCita />
+             
 
               {/* <AplicarVacuna /> */}
               <div className="bg-white p-6 rounded-xl shadow border border-gray-100 placeholder-card">
@@ -70,10 +69,8 @@ export default function DashboardPage() {
                  <>
                     <BusquedaMascotas/>
 
-                  {/* <AgendarCita /> */}
-                  <div className="bg-white p-6 rounded-xl shadow border-l-4">
-                    <h2 className="text-lg font-bold mb-2 text-black"> Agendar Cita</h2>
-                  </div>
+                    <AgendarCita /> 
+                  
                  </>
                )}
                 <VacunasPendientes/>

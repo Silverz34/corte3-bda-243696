@@ -11,13 +11,19 @@ export const useCitas = () => {
   const [error, setError] = useState<string | null>(null);
   const [exito, setExito] = useState<string | null>(null);
 
-  const agendarCita = async (mascota_id: number, fecha_hora: string, motivo: string) => {
+  const agendarCita = async (mascota_id: number, veterinario_id: number, fecha_hora: string, motivo: string) => {
     setCargando(true);
     setError(null);
     setExito(null);
 
     try {
-      const respuesta = await apiPost<cita[]>('/citas/agendar');
+        const respuesta = await apiPost<cita[]>('/citas/agendar', {
+         mascota_id,
+         veterinario_id,
+         fecha_hora,
+         motivo
+        });
+      console.log('respuestas', respuesta.data)
       setExito(respuesta.message || 'Cita agendada con éxito.');
       return true; 
       
