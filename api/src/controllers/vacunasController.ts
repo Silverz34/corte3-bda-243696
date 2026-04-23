@@ -80,3 +80,23 @@ export const aplicarVacuna = async (req: Request, res: Response) => {
         client.release();
     }
 };
+
+export const obtenerCatalogoVacunas = async (req: Request, res: Response) => {
+    const client = await pool.connect();
+    try {
+       const querySQL = `
+            SELECT 
+                id, 
+                nombre, 
+                costo_unitario AS precio 
+            FROM inventario_vacunas 
+            ORDER BY nombre ASC
+        `;
+        const result = await client.query(querySQL);
+        res.status(200).json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener vacunas' });
+    } finally {
+        client.release();
+    }
+};

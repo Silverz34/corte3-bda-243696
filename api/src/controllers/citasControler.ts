@@ -29,7 +29,7 @@ export const agendarCita = async (req: Request, res: Response): Promise<void> =>
 
         //llamar la store procedure para agemdar una nueva cita 
         //lo llamare con call 
-        const  querySQL = `CALL agendar_cita($1, $2, $3, $4, NULL)`;
+        const  querySQL = `CALL sp_agendar_cita($1, $2, $3, $4, NULL)`;
         const valores = [mascota_id, veterinario_id, fecha_hora, motivo]
         
         const result = await client.query(querySQL, valores);
