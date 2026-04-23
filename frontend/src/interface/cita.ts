@@ -4,4 +4,6 @@ export interface cita{
     fecha_hora: string;
     motivo: string;
     estado: string; 
+    costo_cobrado: number;
 }
+
